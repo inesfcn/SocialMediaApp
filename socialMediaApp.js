@@ -18,8 +18,14 @@ class ViewPosts {
   }
   renderPosts() {
     return this.posts.reduce((acc, curr) => {
-      acc += `Post: ${curr.post} \nLikes: ${curr.likes} \nID:${curr.ID} \n\n`;
-      return acc;
+      if (curr.likes && curr.post) {
+        return (acc += `Post: ${curr.post} \nLikes: ${curr.likes} \nID:${curr.ID} \n\n`);
+      }
+      if (curr.post) {
+        return (acc += `Post: ${curr.post} \nID:${curr.ID} \n\n`);
+      } else if (curr.likes) {
+        return (acc += `Likes: ${curr.likes} \nID:${curr.ID} \n\n`);
+      }
     }, "");
   }
 }
@@ -50,19 +56,17 @@ class PostsControl extends ViewPosts {
     });
   }
   removePost({ post, likes, ID }) {
-    let IDindex = ID - 1;
-
     if (post && likes) {
-      this.posts.splice(IDindex, 1);
+      this.posts.splice(ID - 1, 1);
     }
     if (post) {
-      const postToChange = this.posts.find((post) => post.ID === 3);
+      const postToChange = this.posts.find((post) => post.ID === ID);
       delete postToChange.post;
+    } else if (likes) {
+      const postToChange2 = this.posts.find((post) => post.ID === 3);
+      delete postToChange2.likes;
     }
-    if (likes) {
-      const postToChange = this.posts.find((post) => post.ID === 3);
-      delete postToChange.likes;
-    }
+    console.log(this.posts);
   }
 
   addLike(id) {
@@ -78,7 +82,7 @@ class PostsControl extends ViewPosts {
 const productData = new PostsControl(posts);
 productData.createPost({ post: "Drunk Video", likes: 10 });
 productData.editPost({ post: "Underwhelming Selfie", ID: 3 });
-productData.removePost({ post: "delete", ID: 3 });
+productData.removePost({ likes: "d", ID: 3 });
 productData.addLike(2);
 productData.removeLike(1);
 console.log(productData.renderPosts());
