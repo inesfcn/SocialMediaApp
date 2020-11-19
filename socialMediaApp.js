@@ -51,23 +51,35 @@ class PostsControl extends ViewPosts {
   }
   removePost({ post, likes, ID }) {
     let IDindex = ID - 1;
-    let postIndex = this.posts[IDindex];
-    console.log(postIndex);
+
     if (post && likes) {
       this.posts.splice(IDindex, 1);
     }
     if (post) {
-      // postIndex.splice(0, 1);
+      const postToChange = this.posts.find((post) => post.ID === 3);
+      delete postToChange.post;
     }
     if (likes) {
-      // postIndex.splice(1, 1);
+      const postToChange = this.posts.find((post) => post.ID === 3);
+      delete postToChange.likes;
     }
   }
+
+  addLike(id) {
+    this.posts[id - 1].likes++;
+  }
+
+  removeLike(id) {
+    this.posts[id - 1].likes--;
+  }
 }
+
 //CALL STACK
 const productData = new PostsControl(posts);
 productData.createPost({ post: "Drunk Video", likes: 10 });
 productData.editPost({ post: "Underwhelming Selfie", ID: 3 });
-productData.removePost({ post: "delete", /*likes: "delete",*/ ID: 3 });
+productData.removePost({ post: "delete", ID: 3 });
+productData.addLike(2);
+productData.removeLike(1);
 console.log(productData.renderPosts());
 //
